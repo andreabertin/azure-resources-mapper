@@ -10,12 +10,13 @@ namespace azure_resources_mapper
         private const string Client = "";
         private const string Secret = "";
         private const string Tenant = "";
+        private const string Subscription = "";
 
         static void Main(string[] args)
         {
             WriteLine("Mapper Started");
 
-            var azure = AuthenticateAzure(Client, Secret, Tenant);
+            var azure = AuthenticateAzure(Client, Secret, Tenant, Subscription);
             WriteLine("Authenticated");
 
             foreach (var resourceGroup in azure.ResourceGroups.List())
@@ -27,17 +28,17 @@ namespace azure_resources_mapper
                     foreach (var webApp in azure.AppServices.WebApps.ListWebAppBasic())
                     {
                         WriteLine($"  --> {string.Join(",", webApp.HostNames)}");
-                        foreach (var VARIABLE in azure.WebApps.GetById(webApp.Id).)
-                        {
+                        //foreach (var VARIABLE in azure.WebApps.GetById(webApp.Id).)
+                        //{
                             
-                        }
+                        //}
                     }
                 }
             }
 
         }
 
-        static IAzure AuthenticateAzure(string client, string secret, string tenant)
+        static IAzure AuthenticateAzure(string client, string secret, string tenant, string subscription)
         {
             var credentials = SdkContext.AzureCredentialsFactory.FromServicePrincipal(
                 client, 
@@ -49,7 +50,7 @@ namespace azure_resources_mapper
             return Azure.Configure()
                 .WithLogLevel(HttpLoggingDelegatingHandler.Level.Basic)
                 .Authenticate(credentials)
-                .WithDefaultSubscription();
+                .WithSubscription(subscription);
         }
     }
 }
